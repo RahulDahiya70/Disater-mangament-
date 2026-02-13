@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RescueRelief AI — National Disaster Management Dashboard (Demo)</title>
+    <link rel="stylesheet" href="./assets/styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="topbar">
+      <div class="container topbar__inner">
+        <div class="brand" role="banner" aria-label="RescueRelief AI">
+          <div class="brand__logo" aria-hidden="true">RR</div>
+          <div class="brand__meta">
+            <div class="brand__name">RescueRelief AI</div>
+            <div class="brand__tag">National Disaster Management Dashboard (Demo)</div>
+          </div>
+        </div>
+
+        <nav class="nav" aria-label="Primary">
+          <a class="nav__link" href="#/home" data-route="home">Home</a>
+          <a class="nav__link" href="#/disasters" data-route="disasters">Disasters</a>
+          <a class="nav__link" href="#/resources" data-route="resources">Resources</a>
+          <a class="nav__link" href="#/alerts" data-route="alerts">Alerts</a>
+          <a class="nav__link" href="#/analytics" data-route="analytics">Analytics</a>
+          <a class="nav__link" href="#/contact" data-route="contact">Contact</a>
+        </nav>
+
+        <div class="topbar__right">
+          <div class="topbar__search">
+            <input class="input input--sm" id="global-search" placeholder="Search disasters, alerts, locations…" />
+          </div>
+          <div class="pill" title="Demo data saved in your browser">
+            <span class="pill__dot" aria-hidden="true"></span>
+            Local demo
+          </div>
+          <button class="btn btn--ghost" id="btn-export" type="button" title="Export demo data to JSON">
+            Export
+          </button>
+          <button class="btn btn--ghost" id="btn-import" type="button" title="Import demo data from JSON">
+            Import
+          </button>
+          <button class="btn btn--ghost" id="btn-reset-demo" type="button" title="Reset demo data">
+            Reset
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main id="main" class="container">
+      <section class="grid grid--stats" aria-label="Overview stats">
+        <article class="card stat">
+          <div class="stat__label">Active disasters</div>
+          <div class="stat__value" id="stat-active-disasters">—</div>
+          <div class="stat__hint">Tracked in your area</div>
+        </article>
+        <article class="card stat">
+          <div class="stat__label">High priority alerts</div>
+          <div class="stat__value" id="stat-high-alerts">—</div>
+          <div class="stat__hint">Red / critical</div>
+        </article>
+        <article class="card stat">
+          <div class="stat__label">Resource readiness</div>
+          <div class="stat__value" id="stat-readiness">—</div>
+          <div class="stat__hint">Across all supplies</div>
+        </article>
+        <article class="card stat">
+          <div class="stat__label">Last update</div>
+          <div class="stat__value stat__value--small" id="stat-last-update">—</div>
+          <div class="stat__hint">Saved locally</div>
+        </article>
+      </section>
+
+      <section class="card hero" id="route-home" data-view="home" aria-label="Home">
+        <div class="hero__left">
+          <div class="homeBadge">National Command View</div>
+          <h1 class="hero__title">Real‑Time Disaster Monitoring</h1>
+          <p class="hero__subtitle">
+            RescueRelief AI helps authorities monitor disasters, allocate resources, and issue early warnings using
+            data‑driven insights.
+          </p>
+
+          <div class="hero__actions">
+            <a class="btn btn--primary" href="#/alerts">Issue alert</a>
+            <a class="btn" href="#/resources">Allocate resources</a>
+            <a class="btn btn--ghost" href="#/disasters">Manage disasters</a>
+          </div>
+
+          <div class="homeHighlights" aria-label="Quick overview">
+            <div class="homeHighlight">
+              <div class="homeHighlight__title">Fast triage</div>
+              <div class="homeHighlight__desc">Spot red alerts instantly and respond with one‑click workflows.</div>
+            </div>
+            <div class="homeHighlight">
+              <div class="homeHighlight__title">Resource readiness</div>
+              <div class="homeHighlight__desc">Keep kits, boats, food and teams ready for immediate deployment.</div>
+            </div>
+            <div class="homeHighlight">
+              <div class="homeHighlight__title">Clear communication</div>
+              <div class="homeHighlight__desc">Publish actionable alerts with consistent messaging and preview.</div>
+            </div>
+          </div>
+
+          <div class="callout callout--danger" role="status" aria-live="polite">
+            <div class="callout__title">⚠️ High Priority Alert</div>
+            <div class="callout__body">
+              <div class="callout__headline" id="home-high-alert-headline">Flood Warning: Chennai – Red Alert issued</div>
+              <div class="callout__detail" id="home-high-alert-detail">
+                Evacuation teams are active. Emergency services on standby.
+              </div>
+              <div class="callout__actions">
+                <a class="btn btn--danger btn--sm" href="#/alerts">View & manage</a>
+                <button class="btn btn--ghost btn--sm" id="btn-ack-home-alert" type="button">Acknowledge</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero__right" aria-label="Home side panels">
+          <div class="stack">
+            <div class="panel">
+              <div class="panel__header">
+                <div>
+                  <div class="panel__title">Live feed</div>
+                  <div class="panel__subtitle">Latest changes (demo)</div>
+                </div>
+              </div>
+              <div class="panel__body">
+                <div class="list" id="home-feed"></div>
+                <a class="btn btn--ghost btn--sm" href="#/analytics">Open Analytics</a>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel__header">
+                <div>
+                  <div class="panel__title">Quick actions</div>
+                  <div class="panel__subtitle">Simple workflows</div>
+                </div>
+              </div>
+              <div class="panel__body">
+                <button class="action" id="qa-create-disaster" type="button">
+                  <div class="action__title">Create a new disaster</div>
+                  <div class="action__desc">Add incident, set location + status</div>
+                </button>
+                <button class="action" id="qa-allocate-resources" type="button">
+                  <div class="action__title">Allocate resources</div>
+                  <div class="action__desc">Assign kits/boats/workers</div>
+                </button>
+                <button class="action" id="qa-issue-alert" type="button">
+                  <div class="action__title">Issue an alert</div>
+                  <div class="action__desc">Publish warning + guidance</div>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="view" id="route-disasters" data-view="disasters" aria-label="Disasters">
+        <div class="view__header">
+          <div>
+            <h2 class="view__title">Disasters</h2>
+            <p class="view__subtitle">Track incidents, update status, resolve events.</p>
+          </div>
+          <div class="view__actions">
+            <input class="input" id="disaster-search" placeholder="Search type/location/status…" />
+            <button class="btn btn--primary" id="btn-add-disaster" type="button">Add disaster</button>
+          </div>
+        </div>
+
+        <div class="grid grid--2">
+          <article class="card">
+            <div class="card__header">
+              <div class="card__title">Active Disaster Alerts</div>
+              <div class="card__subtitle">Click a row to edit</div>
+            </div>
+            <div class="card__body">
+              <div class="table-wrap" role="region" aria-label="Disasters list" tabindex="0">
+                <table class="table" id="disasters-table">
+                  <thead>
+                    <tr>
+                      <th>Type</th>
+                      <th>Location</th>
+                      <th>Status</th>
+                      <th>Updated</th>
+                      <th class="right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="disasters-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+            <div class="card__footer">
+              <span class="muted" id="disasters-count">—</span>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card__header">
+              <div class="card__title">Allocation log</div>
+              <div class="card__subtitle">What was assigned, to where</div>
+            </div>
+            <div class="card__body">
+              <div class="list" id="allocations-list"></div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="view" id="route-resources" data-view="resources" aria-label="Resources">
+        <div class="view__header">
+          <div>
+            <h2 class="view__title">Emergency Resources</h2>
+            <p class="view__subtitle">Update inventory, allocate to disasters, see readiness.</p>
+          </div>
+          <div class="view__actions">
+            <button class="btn" id="btn-replenish" type="button">Quick replenish</button>
+            <button class="btn btn--primary" id="btn-allocate" type="button">Allocate</button>
+          </div>
+        </div>
+
+        <div class="grid grid--cards" id="resources-grid"></div>
+      </section>
+
+      <section class="view" id="route-alerts" data-view="alerts" aria-label="Alerts">
+        <div class="view__header">
+          <div>
+            <h2 class="view__title">Alerts</h2>
+            <p class="view__subtitle">Create and manage early warnings.</p>
+          </div>
+          <div class="view__actions">
+            <select class="select" id="alerts-filter">
+              <option value="all">All levels</option>
+              <option value="red">Red</option>
+              <option value="orange">Orange</option>
+              <option value="advisory">Advisory</option>
+              <option value="acknowledged">Acknowledged</option>
+            </select>
+            <button class="btn btn--primary" id="btn-create-alert" type="button">Create alert</button>
+          </div>
+        </div>
+
+        <div class="grid grid--2">
+          <article class="card">
+            <div class="card__header">
+              <div class="card__title">Active alerts</div>
+              <div class="card__subtitle">Acknowledge once handled</div>
+            </div>
+            <div class="card__body">
+              <div class="list" id="alerts-list"></div>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card__header">
+              <div class="card__title">Broadcast preview</div>
+              <div class="card__subtitle">How it would look to the public</div>
+            </div>
+            <div class="card__body">
+              <div class="broadcast" id="broadcast-preview">
+                <div class="broadcast__level">—</div>
+                <div class="broadcast__headline">Select an alert</div>
+                <div class="broadcast__message muted">Your message preview will appear here.</div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="view" id="route-analytics" data-view="analytics" aria-label="Analytics">
+        <div class="view__header">
+          <div>
+            <h2 class="view__title">Analytics</h2>
+            <p class="view__subtitle">Quick insights for decision-making (demo).</p>
+          </div>
+          <div class="view__actions">
+            <button class="btn" id="btn-generate-report" type="button">Generate report</button>
+            <button class="btn btn--primary" id="btn-simulate-update" type="button">Simulate update</button>
+          </div>
+        </div>
+
+        <div class="grid grid--2">
+          <article class="card">
+            <div class="card__header">
+              <div>
+                <div class="card__title">Situation summary</div>
+                <div class="card__subtitle">Counts by severity and type</div>
+              </div>
+            </div>
+            <div class="card__body">
+              <div class="grid grid--3" id="analytics-kpis"></div>
+              <div class="divider"></div>
+              <div class="grid grid--2">
+                <div class="mini">
+                  <div class="mini__title">Hotspots</div>
+                  <div class="mini__sub">Most affected locations</div>
+                  <div class="list" id="analytics-hotspots"></div>
+                </div>
+                <div class="mini">
+                  <div class="mini__title">Resource pressure</div>
+                  <div class="mini__sub">Lowest inventory items</div>
+                  <div class="list" id="analytics-pressure"></div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card__header">
+              <div>
+                <div class="card__title">Operational notes</div>
+                <div class="card__subtitle">Actionable recommendations</div>
+              </div>
+            </div>
+            <div class="card__body">
+              <div class="note-grid">
+                <div class="note">
+                  <div class="note__title">Triage</div>
+                  <div class="note__body" id="rec-triage">—</div>
+                </div>
+                <div class="note">
+                  <div class="note__title">Allocation</div>
+                  <div class="note__body" id="rec-allocation">—</div>
+                </div>
+                <div class="note">
+                  <div class="note__title">Public guidance</div>
+                  <div class="note__body" id="rec-guidance">—</div>
+                </div>
+              </div>
+              <div class="divider"></div>
+              <div class="report" id="report-output">
+                <div class="muted">Click “Generate report” to create a quick summary here.</div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="view" id="route-contact" data-view="contact" aria-label="Contact">
+        <div class="view__header">
+          <div>
+            <h2 class="view__title">Contact</h2>
+            <p class="view__subtitle">Send a report or request support (demo saves locally).</p>
+          </div>
+        </div>
+
+        <div class="grid grid--2">
+          <article class="card">
+            <div class="card__header">
+              <div class="card__title">Send message</div>
+              <div class="card__subtitle">For authorities and responders</div>
+            </div>
+            <div class="card__body">
+              <form id="contact-form" class="form">
+                <label class="field">
+                  <span class="field__label">Name</span>
+                  <input class="input" name="name" required placeholder="e.g., Rahul" />
+                </label>
+                <label class="field">
+                  <span class="field__label">Email</span>
+                  <input class="input" type="email" name="email" required placeholder="e.g., rahul@email.com" />
+                </label>
+                <label class="field">
+                  <span class="field__label">Message</span>
+                  <textarea class="textarea" name="message" required rows="4" placeholder="What do you need?"></textarea>
+                </label>
+
+                <div class="row">
+                  <button class="btn btn--primary" type="submit">Submit</button>
+                  <button class="btn btn--ghost" type="reset">Clear</button>
+                </div>
+
+                <div class="toast" id="contact-toast" role="status" aria-live="polite" hidden></div>
+              </form>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card__header">
+              <div class="card__title">Recent messages</div>
+              <div class="card__subtitle">Stored on this device</div>
+            </div>
+            <div class="card__body">
+              <div class="list" id="messages-list"></div>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer__inner">
+        <div class="muted">© 2026 RescueRelief AI | Academic Project Demo</div>
+        <div class="footer__links">
+          <a class="link" href="#/home">Home</a>
+          <a class="link" href="#/alerts">Alerts</a>
+          <a class="link" href="#/resources">Resources</a>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Hidden file input for import -->
+    <input id="import-file" type="file" accept="application/json" hidden />
+
+    <!-- Modals -->
+    <dialog class="modal" id="modal-disaster">
+      <form method="dialog" class="modal__card" id="disaster-form">
+        <div class="modal__header">
+          <div>
+            <div class="modal__title" id="disaster-modal-title">Add disaster</div>
+            <div class="modal__subtitle">Fill details and save</div>
+          </div>
+          <button class="icon-btn" value="cancel" aria-label="Close">✕</button>
+        </div>
+
+        <div class="modal__body form">
+          <input type="hidden" name="id" />
+          <label class="field">
+            <span class="field__label">Type</span>
+            <select class="select" name="type" required>
+              <option value="" selected disabled>Select type</option>
+              <option value="Flood">Flood</option>
+              <option value="Cyclone">Cyclone</option>
+              <option value="Heatwave">Heatwave</option>
+              <option value="Earthquake">Earthquake</option>
+              <option value="Wildfire">Wildfire</option>
+              <option value="Landslide">Landslide</option>
+            </select>
+          </label>
+          <label class="field">
+            <span class="field__label">Location</span>
+            <input class="input" name="location" required placeholder="e.g., Chennai" />
+          </label>
+          <label class="field">
+            <span class="field__label">Status</span>
+            <select class="select" name="status" required>
+              <option value="Red Alert">Red Alert</option>
+              <option value="Orange Alert">Orange Alert</option>
+              <option value="Advisory">Advisory</option>
+              <option value="Resolved">Resolved</option>
+            </select>
+          </label>
+          <label class="field">
+            <span class="field__label">Notes</span>
+            <textarea class="textarea" name="notes" rows="3" placeholder="Optional notes"></textarea>
+          </label>
+        </div>
+
+        <div class="modal__footer">
+          <button class="btn btn--ghost" value="cancel" type="button" data-close-modal>Cancel</button>
+          <button class="btn btn--primary" id="btn-save-disaster" value="default" type="submit">Save</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog class="modal" id="modal-allocate">
+      <form method="dialog" class="modal__card" id="allocate-form">
+        <div class="modal__header">
+          <div>
+            <div class="modal__title">Allocate resources</div>
+            <div class="modal__subtitle">Assign supplies to an active disaster</div>
+          </div>
+          <button class="icon-btn" value="cancel" aria-label="Close">✕</button>
+        </div>
+
+        <div class="modal__body form">
+          <label class="field">
+            <span class="field__label">Disaster</span>
+            <select class="select" name="disasterId" id="allocate-disaster" required></select>
+          </label>
+          <label class="field">
+            <span class="field__label">Resource</span>
+            <select class="select" name="resourceKey" id="allocate-resource" required></select>
+          </label>
+          <label class="field">
+            <span class="field__label">Quantity</span>
+            <input class="input" type="number" min="1" step="1" name="qty" required value="1" />
+          </label>
+          <label class="field">
+            <span class="field__label">Priority</span>
+            <select class="select" name="priority" required>
+              <option value="High">High</option>
+              <option value="Medium" selected>Medium</option>
+              <option value="Low">Low</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="modal__footer">
+          <button class="btn btn--ghost" value="cancel" type="button" data-close-modal>Cancel</button>
+          <button class="btn btn--primary" value="default" type="submit">Allocate</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog class="modal" id="modal-alert">
+      <form method="dialog" class="modal__card" id="alert-form">
+        <div class="modal__header">
+          <div>
+            <div class="modal__title">Create alert</div>
+            <div class="modal__subtitle">Broadcast an early warning (demo)</div>
+          </div>
+          <button class="icon-btn" value="cancel" aria-label="Close">✕</button>
+        </div>
+
+        <div class="modal__body form">
+          <label class="field">
+            <span class="field__label">Level</span>
+            <select class="select" name="level" required>
+              <option value="red">Red</option>
+              <option value="orange" selected>Orange</option>
+              <option value="advisory">Advisory</option>
+            </select>
+          </label>
+          <label class="field">
+            <span class="field__label">Type</span>
+            <input class="input" name="type" required placeholder="e.g., Flood Warning" />
+          </label>
+          <label class="field">
+            <span class="field__label">Location</span>
+            <input class="input" name="location" required placeholder="e.g., Chennai" />
+          </label>
+          <label class="field">
+            <span class="field__label">Message</span>
+            <textarea class="textarea" name="message" required rows="4" placeholder="Public guidance…"></textarea>
+          </label>
+        </div>
+
+        <div class="modal__footer">
+          <button class="btn btn--ghost" value="cancel" type="button" data-close-modal>Cancel</button>
+          <button class="btn btn--primary" value="default" type="submit">Publish</button>
+        </div>
+      </form>
+    </dialog>
+
+    <!-- AI Chatbot -->
+    <button id="ai-agent-toggle" class="ai-agent-toggle" title="Open AI Assistant">🤖</button>
+    <div id="ai-agent-chat" class="ai-agent-chat" style="display: none;">
+      <div class="ai-agent-header">
+        <span>AI Assistant</span>
+        <button id="ai-agent-close">×</button>
+      </div>
+      <div id="ai-agent-messages" class="ai-agent-messages">
+        <div class="message ai">
+          Hello! I'm your AI assistant for disaster alerts. Ask me about alerts, disasters, resources, or type 'help' for guidance.
+        </div>
+      </div>
+      <div class="ai-agent-input">
+        <input id="ai-agent-input" type="text" placeholder="Ask me about alerts..." />
+        <button id="ai-agent-send">Send</button>
+      </div>
+    </div>
+
+    <script src="./assets/app.js"></script>
+  </body>
+</html>

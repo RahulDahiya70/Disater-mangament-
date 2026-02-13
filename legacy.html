@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RescueRelief AI — National Disaster Management Dashboard (Demo)</title>
+    <link rel="stylesheet" href="./assets/styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="topbar">
+      <div class="container topbar__inner">
+        <div class="brand" role="banner" aria-label="RescueRelief AI">
+          <div class="brand__logo" aria-hidden="true">RR</div>
+          <div class="brand__meta">
+            <div class="brand__name">RescueRelief AI</div>
+            <div class="brand__tag">National Disaster Management Dashboard (Demo)</div>
+          </div>
+        </div>
+
+        <nav class="nav" aria-label="Primary">
+          <a class="nav__link" href="#/home" data-route="home">Home</a>
+          <a class="nav__link" href="#/disasters" data-route="disasters">Disasters</a>
+          <a class="nav__link" href="#/resources" data-route="resources">Resources</a>
+          <a class="nav__link" href="#/alerts" data-route="alerts">Alerts</a>
+          <a class="nav__link" href="#/analytics" data-route="analytics">Analytics</a>
+          <a class="nav__link" href="#/contact" data-route="contact">Contact</a>
+        </nav>
+
+        <div class="topbar__right">
+          <div class="topbar__search">
+            <input class="input input--sm" id="global-search" placeholder="Search disasters, alerts, locations…" />
+          </div>
+          <div class="pill" title="Demo data saved in your browser">
+            <span class="pill__dot" aria-hidden="true"></span>
+            Local demo
+          </div>
+          <button class="btn btn--ghost" id="btn-export" type="button" title="Export demo data to JSON">
+            Export
+          </button>
+          <button class="btn btn--ghost" id="btn-import" type="button" title="Import demo data from JSON">
+            Import
+          </button>
+          <button class="btn btn--ghost" id="btn-reset-demo" type="button" title="Reset demo data">
+            Reset
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main id="main" class="container">
+      <section class="grid grid--stats" aria-label="Overview stats">
+        <article class="card stat">
+          <div class="stat__label">Active disasters</div>
+          <div class="stat__value" id="stat-active-disasters">—</div>
+          <div class="stat__hint">Tracked in your area</div>
+        </article>
+        <article class="card stat">
+          <div class="stat__label">High priority alerts</div>
+          <div class="stat__value" id="stat-high-alerts">—</div>
+          <div class="stat__hint">Red / critical</div>
+        </article>
+        <article class="card stat">
+          <div class="stat__label">Resource readiness</div>
+          <div class="stat__value" id="stat-readiness">—</div>
+          <div class="stat__hint">Across all supplies</div>
+        </article>
+        <article class="card stat">
+          <div class="stat__label">Last update</div>
+          <div class="stat__value stat__value--small" id="stat-last-update">—</div>
+          <div class="stat__hint">Saved locally</div>
+        </article>
+      </section>
+
+      <section class="card hero" id="route-home" data-view="home" aria-label="Home">
+        <div class="hero__left">
+          <div class="homeBadge">National Command View</div>
+          <h1 class="hero__title">Real‑Time Disaster Monitoring</h1>
+          <p class="hero__subtitle">
+            RescueRelief AI helps authorities monitor disasters, allocate resources, and issue early warnings using
+            data‑driven insights.
+          </p>
+
+          <div class="hero__actions">
+            <a class="btn btn--primary" href="#/alerts">Issue alert</a>
+            <a class="btn" href="#/resources">Allocate resources</a>
+            <a class="btn btn--ghost" href="#/disasters">Manage disasters</a>
+          </div>
+
+          <div class="homeHighlights" aria-label="Quick overview">
+            <div class="homeHighlight">
+              <div class="homeHighlight__title">Fast triage</div>
+              <div class="homeHighlight__desc">Spot red alerts instantly and respond with one‑click workflows.</div>
+            </div>
+            <div class="homeHighlight">
+              <div class="homeHighlight__title">Resource readiness</div>
+              <div class="homeHighlight__desc">Keep kits, boats, food and teams ready for immediate deployment.</div>
+            </div>
+            <div class="homeHighlight">
+              <div class="homeHighlight__title">Clear communication</div>
+              <div class="homeHighlight__desc">Publish actionable alerts with consistent messaging and preview.</div>
+            </div>
+          </div>
+
+          <div class="callout callout--danger" role="status" aria-live="polite">
+            <div class="callout__title">⚠️ High Priority Alert</div>
+            <div class="callout__body">
+              <div class="callout__headline" id="home-high-alert-headline">Flood Warning: Chennai – Red Alert issued</div>
+              <div class="callout__detail" id="home-high-alert-detail">
+                Evacuation teams are active. Emergency services on standby.
+              </div>
+              <div class="callout__actions">
+                <a class="btn btn--danger btn--sm" href="#/alerts">View & manage</a>
+                <button class="btn btn--ghost btn--sm" id="btn-ack-home-alert" type="button">Acknowledge</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero__right" aria-label="Home side panels">
+          <div class="stack">
+            <div class="panel">
+              <div class="panel__header">
+                <div>
+                  <div class="panel__title">Live feed</div>
+                  <div class="panel__subtitle">Latest changes (demo)</div>
+                </div>
+              </div>
+              <div class="panel__body">
+                <div class="list" id="home-feed"></div>
+                <a class="btn btn--ghost btn--sm" href="#/analytics">Open Analytics</a>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel__header">
+                <div>
+                  <div class="panel__title">Quick actions</div>
+                  <div class="panel__subtitle">Simple workflows</div>
+                </div>
+              </div>
+              <div class="panel__body">
+                <button class="action" id="qa-create-disaster" type="button">
+                  <div class="action__title">Create a new disaster</div>
+                  <div class="action__desc">Add incident, set location + status</div>
+                </button>
+                <button class="action" id="qa-allocate-resources" type="button">
+                  <div class="action__title">Allocate resources</div>
+                  <div class="action__desc">Assign kits/boats/workers</div>
+                </button>
+                <button class="action" id="qa-issue-alert" type="button">
+                  <div class="action__title">Issue an alert</div>
+                  <div class="action__desc">Publish warning + guidance</div>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- (Legacy file preserved. React version will replace this UI.) -->
+    </main>
+
+    <footer class="footer">
+      <div class="container footer__inner">
+        <div class="muted">© 2026 RescueRelief AI | Academic Project Demo</div>
+        <div class="footer__links">
+          <a class="link" href="#/home">Home</a>
+          <a class="link" href="#/alerts">Alerts</a>
+          <a class="link" href="#/resources">Resources</a>
+        </div>
+      </div>
+    </footer>
+
+    <input id="import-file" type="file" accept="application/json" hidden />
+
+    <!-- AI Chatbot -->
+    <button id="ai-agent-toggle" class="ai-agent-toggle" title="Open AI Assistant">🤖</button>
+    <div id="ai-agent-chat" class="ai-agent-chat" style="display: none;">
+      <div class="ai-agent-header">
+        <span>AI Assistant</span>
+        <button id="ai-agent-close">×</button>
+      </div>
+      <div id="ai-agent-messages" class="ai-agent-messages">
+        <div class="message ai">
+          Hello! I'm your AI assistant for disaster alerts. Ask me about alerts, disasters, resources, or type 'help' for guidance.
+        </div>
+      </div>
+      <div class="ai-agent-input">
+        <input id="ai-agent-input" type="text" placeholder="Ask me about alerts..." />
+        <button id="ai-agent-send">Send</button>
+      </div>
+    </div>
+
+    <script src="./assets/app.js"></script>
+  </body>
+</html>
